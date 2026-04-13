@@ -46,6 +46,105 @@
             flex-direction: column;
         }
 
+        /* ZOOM */
+        body.zoom-10 { zoom: 1.1; }
+        body.zoom-15 { zoom: 1.15; }
+        body.zoom-20 { zoom: 1.2; }
+
+        /* BOTÕES VERTICAIS NO CANTO DIREITO */
+        .vertical-zoom {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 15px 12px;
+            border-radius: 50px;
+            border: 1px solid rgba(0, 184, 148, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .zoom-vertical-btn {
+            background: linear-gradient(135deg, var(--material-color), #00a884);
+            border: none;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 75px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .zoom-vertical-btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #00a884, var(--material-color));
+            box-shadow: 0 4px 12px rgba(0, 184, 148, 0.5);
+        }
+
+        .zoom-vertical-btn:active {
+            transform: scale(0.95);
+        }
+
+        .zoom-reset {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            margin-top: 5px;
+            border-top: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .zoom-reset:hover {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+        }
+
+        /* BOTÃO BACKUP VERTICAL */
+        .vertical-backup {
+            position: fixed;
+            right: 20px;
+            bottom: 120px;
+            z-index: 9999;
+        }
+
+        .backup-vertical-btn {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+            border: none;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            min-width: 75px;
+        }
+
+        .backup-vertical-btn i {
+            font-size: 18px;
+        }
+
+        .backup-vertical-btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            box-shadow: 0 6px 20px rgba(142, 68, 173, 0.5);
+        }
+
+        .backup-vertical-btn:active {
+            transform: scale(0.95);
+        }
+
         ::-webkit-scrollbar {
             width: 10px;
             height: 10px;
@@ -116,13 +215,8 @@
         }
 
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .loading-text {
@@ -406,6 +500,7 @@
             filter: brightness(1.1);
         }
 
+        /* Área do usuário no topo à direita */
         .user-info {
             position: absolute;
             top: 15px;
@@ -542,15 +637,8 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .section-title {
@@ -1029,15 +1117,8 @@
         }
 
         @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
         /* FOOTER */
@@ -1071,41 +1152,34 @@
                 flex-direction: column;
                 gap: 15px;
             }
-
             .logo-fw,
             .header-right {
                 justify-content: center;
             }
-
             .user-info {
                 position: relative;
                 top: 0;
                 right: 0;
                 justify-content: center;
                 margin-top: 10px;
+                flex-wrap: wrap;
             }
-
             .project-title {
                 font-size: 24px;
             }
-
             .tabs-header {
                 justify-content: center;
             }
-
             .tab-button {
                 padding: 12px 15px;
                 font-size: 13px;
             }
-
             .tab-content {
                 padding: 15px;
             }
-
             .cards-container {
                 grid-template-columns: 1fr;
             }
-
             .floating-btn {
                 width: 50px;
                 height: 50px;
@@ -1113,14 +1187,34 @@
                 left: 20px;
                 font-size: 20px;
             }
-
             .loading-logos img {
                 height: 40px;
             }
-
             .loading-container {
                 min-width: 280px;
                 padding: 25px;
+            }
+            .vertical-zoom {
+                right: 10px;
+                gap: 8px;
+                padding: 10px 8px;
+            }
+            .zoom-vertical-btn {
+                padding: 6px 12px;
+                font-size: 11px;
+                min-width: 60px;
+            }
+            .vertical-backup {
+                right: 10px;
+                bottom: 80px;
+            }
+            .backup-vertical-btn {
+                padding: 8px 12px;
+                min-width: 60px;
+                font-size: 11px;
+            }
+            .backup-vertical-btn i {
+                font-size: 14px;
             }
         }
     </style>
@@ -1142,6 +1236,21 @@
                 <div class="loading-progress-bar" id="loadingProgressBar"></div>
             </div>
         </div>
+    </div>
+
+    <!-- BOTÕES VERTICAIS NO CANTO DIREITO -->
+    <div class="vertical-zoom">
+        <button class="zoom-vertical-btn" data-zoom="10" title="Aumentar 10%">+10%</button>
+        <button class="zoom-vertical-btn" data-zoom="15" title="Aumentar 15%">+15%</button>
+        <button class="zoom-vertical-btn" data-zoom="20" title="Aumentar 20%">+20%</button>
+        <button class="zoom-vertical-btn zoom-reset" data-zoom="0" title="Restaurar tamanho normal">Normal</button>
+    </div>
+
+    <div class="vertical-backup">
+        <button class="backup-vertical-btn" id="backupJsonVerticalBtn" title="Salvar Backup JSON">
+            <i class="fas fa-download"></i>
+            <span>Backup</span>
+        </button>
     </div>
 
     <!-- TELA DE LOGIN -->
@@ -1182,8 +1291,7 @@
     <div id="dashboardScreen" class="dashboard-container" style="display: none;">
         <header class="dashboard-header">
             <div class="user-info">
-                <div class="user-welcome"><i class="fas fa-user"></i> <span id="userWelcomeText">Bem-vindo!</span> <span
-                        class="user-badge" id="userRoleBadge"></span></div>
+                <div class="user-welcome"><i class="fas fa-user"></i> <span id="userWelcomeText">Bem-vindo!</span> <span class="user-badge" id="userRoleBadge"></span></div>
                 <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Sair</button>
             </div>
 
@@ -1223,10 +1331,8 @@
         <!-- ABAS -->
         <div class="tabs-container">
             <div class="tabs-header">
-                <button class="tab-button active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i>
-                    Dashboard</button>
-                <button class="tab-button" data-tab="cadastro-materiais"><i class="fas fa-plus-circle"></i> Cadastrar
-                    Materiais</button>
+                <button class="tab-button active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
+                <button class="tab-button" data-tab="cadastro-materiais"><i class="fas fa-plus-circle"></i> Cadastrar Materiais</button>
                 <button class="tab-button" data-tab="catalogo-geral"><i class="fas fa-list"></i> Catálogo Geral</button>
                 <button class="tab-button" data-tab="database"><i class="fas fa-database"></i> Banco de Dados</button>
             </div>
@@ -1236,8 +1342,7 @@
                 <h2 class="section-title"><i class="fas fa-chart-line"></i> Dashboard de Materiais</h2>
                 <div class="cards-container">
                     <div class="card">
-                        <h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> Materiais com Estoque Baixo
-                        </h3>
+                        <h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> Materiais com Estoque Baixo</h3>
                         <div id="estoqueBaixoList">
                             <p style="text-align: center; color: var(--text-muted); padding: 20px;">Carregando...</p>
                         </div>
@@ -1251,23 +1356,19 @@
                         <div class="progress-container">
                             <div class="progress-label"><span>Normal</span><span id="normalPercent">0%</span></div>
                             <div class="progress-bar">
-                                <div class="progress-fill" id="normalBar"
-                                    style="width: 0%; background-color: var(--success-color);"></div>
+                                <div class="progress-fill" id="normalBar" style="width: 0%; background-color: var(--success-color);"></div>
                             </div>
                         </div>
                         <div class="progress-container">
-                            <div class="progress-label"><span>Estoque Baixo</span><span id="baixoPercent">0%</span>
-                            </div>
+                            <div class="progress-label"><span>Estoque Baixo</span><span id="baixoPercent">0%</span></div>
                             <div class="progress-bar">
-                                <div class="progress-fill" id="baixoBar"
-                                    style="width: 0%; background-color: var(--warning-color);"></div>
+                                <div class="progress-fill" id="baixoBar" style="width: 0%; background-color: var(--warning-color);"></div>
                             </div>
                         </div>
                         <div class="progress-container">
                             <div class="progress-label"><span>Esgotado</span><span id="esgotadoPercent">0%</span></div>
                             <div class="progress-bar">
-                                <div class="progress-fill" id="esgotadoBar"
-                                    style="width: 0%; background-color: var(--danger-color);"></div>
+                                <div class="progress-fill" id="esgotadoBar" style="width: 0%; background-color: var(--danger-color);"></div>
                             </div>
                         </div>
                     </div>
@@ -1280,14 +1381,12 @@
                 <div class="form-container">
                     <form id="materialForm">
                         <div class="form-section">
-                            <h3 class="form-section-title"><i class="fas fa-info-circle"></i> Informações do Material
-                            </h3>
+                            <h3 class="form-section-title"><i class="fas fa-info-circle"></i> Informações do Material</h3>
                             <div class="form-row">
                                 <div class="form-group codigo-item">
                                     <label for="matCodigo">Código do Item</label>
                                     <input type="text" id="matCodigo" placeholder="Ex: MAT-001, PAR-3.8, Personalizado">
-                                    <small style="color: var(--text-muted); font-size: 11px;">Digite um código único
-                                        para identificar este material</small>
+                                    <small style="color: var(--text-muted); font-size: 11px;">Digite um código único para identificar este material</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="matNome" class="required">Nome do Material</label>
@@ -1324,27 +1423,17 @@
                         <div class="form-section">
                             <h3 class="form-section-title"><i class="fas fa-cubes"></i> Quantidade e Estoque</h3>
                             <div class="form-row">
-                                <div class="form-group"><label for="matQuantidade"
-                                        class="required">Quantidade</label><input type="number" id="matQuantidade"
-                                        step="0.01" required></div>
-                                <div class="form-group" id="matKgField" style="display: none;"><label>Quilogramas
-                                        (kg)</label><input type="number" id="matQuilogramas" step="0.01"
-                                        placeholder="Peso em kg"></div>
-                                <div class="form-group"><label for="matEstoqueMinimo">Estoque Mínimo</label><input
-                                        type="number" id="matEstoqueMinimo" step="0.01" value="0"></div>
+                                <div class="form-group"><label for="matQuantidade" class="required">Quantidade</label><input type="number" id="matQuantidade" step="0.01" required></div>
+                                <div class="form-group" id="matKgField" style="display: none;"><label>Quilogramas (kg)</label><input type="number" id="matQuilogramas" step="0.01" placeholder="Peso em kg"></div>
+                                <div class="form-group"><label for="matEstoqueMinimo">Estoque Mínimo</label><input type="number" id="matEstoqueMinimo" step="0.01" value="0"></div>
                             </div>
                         </div>
 
                         <div class="form-section">
-                            <h3 class="form-section-title"><i class="fas fa-map-marker-alt"></i> Localização e
-                                Observações</h3>
+                            <h3 class="form-section-title"><i class="fas fa-map-marker-alt"></i> Localização e Observações</h3>
                             <div class="form-row">
-                                <div class="form-group"><label for="matLocalizacao">Localização</label><input
-                                        type="text" id="matLocalizacao" placeholder="Ex: Armário A2, Prateleira 3">
-                                </div>
-                                <div class="form-group"><label for="matObservacoes">Observações</label><textarea
-                                        id="matObservacoes" rows="3"
-                                        placeholder="Observações sobre o material..."></textarea></div>
+                                <div class="form-group"><label for="matLocalizacao">Localização</label><input type="text" id="matLocalizacao" placeholder="Ex: Armário A2, Prateleira 3"></div>
+                                <div class="form-group"><label for="matObservacoes">Observações</label><textarea id="matObservacoes" rows="3" placeholder="Observações sobre o material..."></textarea></div>
                             </div>
                         </div>
 
@@ -1358,16 +1447,12 @@
                                         <p>Clique para adicionar uma foto do material</p>
                                         <p style="font-size: 12px;">Formatos: JPG, PNG (máx 5MB)</p>
                                     </div>
-                                    <img id="materialImagePreview"
-                                        style="display: none; max-width: 100%; max-height: 100%;">
+                                    <img id="materialImagePreview" style="display: none; max-width: 100%; max-height: 100%;">
                                 </div>
                                 <div class="camera-controls">
-                                    <button type="button" class="btn btn-primary" id="takePhotoBtn"><i
-                                            class="fas fa-camera"></i> Tirar Foto</button>
-                                    <button type="button" class="btn btn-secondary" id="uploadPhotoBtn"><i
-                                            class="fas fa-upload"></i> Carregar Imagem</button>
-                                    <button type="button" class="btn btn-warning" id="clearPhotoBtn"
-                                        style="display: none;"><i class="fas fa-times"></i> Remover Foto</button>
+                                    <button type="button" class="btn btn-primary" id="takePhotoBtn"><i class="fas fa-camera"></i> Tirar Foto</button>
+                                    <button type="button" class="btn btn-secondary" id="uploadPhotoBtn"><i class="fas fa-upload"></i> Carregar Imagem</button>
+                                    <button type="button" class="btn btn-warning" id="clearPhotoBtn" style="display: none;"><i class="fas fa-times"></i> Remover Foto</button>
                                 </div>
                                 <input type="file" id="imageFileInput" accept="image/*" style="display: none;">
                                 <input type="hidden" id="materialImageBase64">
@@ -1375,10 +1460,8 @@
                         </div>
 
                         <div class="btn-group">
-                            <button type="button" class="btn btn-success" id="saveMaterialBtn"><i
-                                    class="fas fa-save"></i> Salvar Material</button>
-                            <button type="button" class="btn btn-warning" id="clearMaterialBtn"><i
-                                    class="fas fa-eraser"></i> Limpar Formulário</button>
+                            <button type="button" class="btn btn-success" id="saveMaterialBtn"><i class="fas fa-save"></i> Salvar Material</button>
+                            <button type="button" class="btn btn-warning" id="clearMaterialBtn"><i class="fas fa-eraser"></i> Limpar Formulário</button>
                         </div>
                     </form>
                 </div>
@@ -1387,16 +1470,12 @@
             <!-- ABA 3: CATÁLOGO GERAL -->
             <div id="catalogo-geral" class="tab-content">
                 <h2 class="section-title"><i class="fas fa-list"></i> Catálogo de Materiais</h2>
-                <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchMaterial"
-                        placeholder="Buscar por código, nome, tipo, localização..."></div>
+                <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchMaterial" placeholder="Buscar por código, nome, tipo, localização..."></div>
                 <div class="btn-group" style="margin-bottom: 20px;">
                     <button class="btn btn-primary" id="filterAllBtn"><i class="fas fa-filter"></i> Todos</button>
-                    <button class="btn btn-success" id="filterNormalBtn"><i class="fas fa-check-circle"></i> Estoque
-                        Normal</button>
-                    <button class="btn btn-warning" id="filterBaixoBtn"><i class="fas fa-exclamation-triangle"></i>
-                        Estoque Baixo</button>
-                    <button class="btn btn-secondary" id="exportExcelBtn"><i class="fas fa-file-excel"></i> Exportar
-                        Excel</button>
+                    <button class="btn btn-success" id="filterNormalBtn"><i class="fas fa-check-circle"></i> Estoque Normal</button>
+                    <button class="btn btn-warning" id="filterBaixoBtn"><i class="fas fa-exclamation-triangle"></i> Estoque Baixo</button>
+                    <button class="btn btn-secondary" id="exportExcelBtn"><i class="fas fa-file-excel"></i> Exportar Excel</button>
                 </div>
                 <div class="table-container">
                     <table id="materiaisTable">
@@ -1415,9 +1494,7 @@
                             </tr>
                         </thead>
                         <tbody id="materiaisTableBody">
-                            <tr>
-                                <td colspan="10" style="text-align:center;">Carregando...</td>
-                            </tr>
+                            <tr><td colspan="10" style="text-align:center;">Carregando...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -1428,28 +1505,20 @@
                 <h2 class="section-title"><i class="fas fa-database"></i> Banco de Dados Online</h2>
                 <div class="form-container">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 25px;">
-                        <div
-                            style="width: 12px; height: 12px; border-radius: 50%; background-color: var(--success-color);">
-                        </div>
+                        <div style="width: 12px; height: 12px; border-radius: 50%; background-color: var(--success-color);"></div>
                         <h3>Status: <span id="connectionStatus">Verificando...</span></h3>
                     </div>
                     <div style="margin-bottom: 30px;">
-                        <h4 style="color: var(--material-color); margin-bottom: 15px;"><i class="fas fa-cloud"></i>
-                            Sincronização</h4>
+                        <h4 style="color: var(--material-color); margin-bottom: 15px;"><i class="fas fa-cloud"></i> Sincronização</h4>
                         <div class="btn-group">
-                            <button class="btn btn-success" id="syncUpBtn"><i class="fas fa-cloud-upload-alt"></i> Subir
-                                para Nuvem</button>
-                            <button class="btn btn-primary" id="syncDownBtn"><i class="fas fa-cloud-download-alt"></i>
-                                Baixar da Nuvem</button>
-                            <button class="btn btn-warning" id="refreshDataBtn"><i class="fas fa-sync-alt"></i>
-                                Atualizar Dados</button>
+                            <button class="btn btn-success" id="syncUpBtn"><i class="fas fa-cloud-upload-alt"></i> Subir para Nuvem</button>
+                            <button class="btn btn-primary" id="syncDownBtn"><i class="fas fa-cloud-download-alt"></i> Baixar da Nuvem</button>
+                            <button class="btn btn-warning" id="refreshDataBtn"><i class="fas fa-sync-alt"></i> Atualizar Dados</button>
                         </div>
                     </div>
                     <div>
-                        <h4 style="color: var(--material-color); margin-bottom: 15px;"><i
-                                class="fas fa-info-circle"></i> Informações</h4>
-                        <div
-                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <h4 style="color: var(--material-color); margin-bottom: 15px;"><i class="fas fa-info-circle"></i> Informações</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                             <div>
                                 <p><strong>Total de Materiais:</strong> <span id="dbTotalMateriais">0</span></p>
                                 <p><strong>Tipos diferentes:</strong> <span id="dbTotalTipos">0</span></p>
@@ -1468,15 +1537,13 @@
         <div id="editModal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">Editar Material</h3><button class="modal-close"
-                        id="closeEditModalBtn">&times;</button>
+                    <h3 class="modal-title">Editar Material</h3><button class="modal-close" id="closeEditModalBtn">&times;</button>
                 </div>
                 <div class="modal-body">
                     <form id="editMaterialForm">
                         <input type="hidden" id="editMaterialId">
                         <div class="form-row">
-                            <div class="form-group"><label>Código</label><input type="text" id="editCodigo"
-                                    placeholder="Código do item"></div>
+                            <div class="form-group"><label>Código</label><input type="text" id="editCodigo" placeholder="Código do item"></div>
                             <div class="form-group"><label>Nome</label><input type="text" id="editNome" required></div>
                             <div class="form-group"><label>Tipo</label><select id="editTipo" required>
                                     <option value="Parafuso">Parafuso</option>
@@ -1496,19 +1563,14 @@
                                     <option value="unidade">Unidade</option>
                                     <option value="kg">Quilograma</option>
                                 </select></div>
-                            <div class="form-group"><label>Quantidade</label><input type="number" id="editQuantidade"
-                                    step="0.01" required></div>
-                            <div id="editKgDiv" style="display: none;"><label>Quilogramas</label><input type="number"
-                                    id="editQuilogramas" step="0.01"></div>
+                            <div class="form-group"><label>Quantidade</label><input type="number" id="editQuantidade" step="0.01" required></div>
+                            <div id="editKgDiv" style="display: none;"><label>Quilogramas</label><input type="number" id="editQuilogramas" step="0.01"></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><label>Estoque Mínimo</label><input type="number"
-                                    id="editEstoqueMinimo" step="0.01"></div>
-                            <div class="form-group"><label>Localização</label><input type="text" id="editLocalizacao">
-                            </div>
+                            <div class="form-group"><label>Estoque Mínimo</label><input type="number" id="editEstoqueMinimo" step="0.01"></div>
+                            <div class="form-group"><label>Localização</label><input type="text" id="editLocalizacao"></div>
                         </div>
-                        <div class="form-group"><label>Observações</label><textarea id="editObservacoes"
-                                rows="2"></textarea></div>
+                        <div class="form-group"><label>Observações</label><textarea id="editObservacoes" rows="2"></textarea></div>
                         <div class="btn-group">
                             <button type="button" class="btn btn-success" id="updateMaterialBtn">Atualizar</button>
                             <button type="button" class="btn btn-danger" id="deleteMaterialBtn">Excluir</button>
@@ -1528,7 +1590,7 @@
     <footer class="site-footer">
         <div class="footer-content">
             <p>Desenvolvido por Fábio Mendes Rodrigues, Planejador da F.W. Company</p>
-            <p class="footer-version">Sistema de Gestão de Materiais de Consumo - v1.2 (com código do item)</p>
+            <p class="footer-version">Sistema de Gestão de Materiais de Consumo - v1.3 (com código do item)</p>
         </div>
     </footer>
 
@@ -1539,9 +1601,6 @@
         const SUPABASE_URL = 'https://eokhafnfmynhridksnuh.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVva2hhZm5mbXluaHJpZGtzbnVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxMzYwMDIsImV4cCI6MjA4NTcxMjAwMn0.-RZtzUYpdOI4_WKOmP9lqw9guJmvh8XFeAL6UXhA4vo';
 
-        // ============================================
-        // VARIÁVEIS GLOBAIS
-        // ============================================
         let supabaseClient = null;
         let isSupabaseConnected = false;
         let currentUser = null;
@@ -1574,7 +1633,6 @@
         function hideLoading() {
             const progressBar = document.getElementById('loadingProgressBar');
             if (progressBar) progressBar.style.width = '100%';
-
             setTimeout(() => {
                 if (loadingInterval) clearInterval(loadingInterval);
                 document.getElementById('loadingOverlay').style.display = 'none';
@@ -1584,11 +1642,8 @@
         function updateLoadingProgress(percent, message) {
             const progressBar = document.getElementById('loadingProgressBar');
             const loadingText = document.querySelector('.loading-text');
-            const loadingSubtext = document.querySelector('.loading-subtext');
-
             if (progressBar) progressBar.style.width = percent + '%';
             if (loadingText && message) loadingText.textContent = message;
-            if (loadingSubtext) loadingSubtext.textContent = 'Aguarde, estamos conectando ao servidor...';
             loadingProgress = percent;
         }
 
@@ -1662,7 +1717,6 @@
                             .select('id')
                             .eq('username', currentUser.username)
                             .single();
-
                         if (error || !data) {
                             logout();
                             return;
@@ -1691,7 +1745,7 @@
         }
 
         // ============================================
-        // FUNÇÃO PARA VERIFICAR BUCKET (SEM CRIAR)
+        // FUNÇÃO PARA VERIFICAR BUCKET
         // ============================================
         async function verificarBucket() {
             if (!isSupabaseConnected) return false;
@@ -1701,16 +1755,13 @@
                     console.error('Erro ao listar buckets:', listError);
                     return false;
                 }
-
                 bucketDisponivel = buckets.some(b => b.id === 'materiais-images');
-
                 if (!bucketDisponivel) {
                     console.warn('⚠️ Bucket "materiais-images" não encontrado!');
                     showNotification('⚠️ Bucket de imagens não configurado. As fotos serão salvas apenas localmente.', 'warning');
                     return false;
                 }
-
-                console.log('✅ Bucket materiais-images encontrado e disponível');
+                console.log('✅ Bucket materiais-images encontrado');
                 return true;
             } catch (error) {
                 console.error('Erro ao verificar bucket:', error);
@@ -1719,66 +1770,43 @@
         }
 
         // ============================================
-        // FUNÇÃO SIMPLIFICADA PARA UPLOAD DE IMAGEM
+        // FUNÇÃO PARA UPLOAD DE IMAGEM
         // ============================================
         async function uploadImageToStorage(imageBase64, nome) {
             if (!imageBase64 || !nome) return null;
-
             try {
-                // Tenta fazer upload diretamente, sem verificar bucket primeiro
                 const base64Response = await fetch(imageBase64);
                 const blob = await base64Response.blob();
                 const nomeLimpo = nome.replace(/[^a-z0-9]/gi, '_').substring(0, 50);
                 const fileName = `material_${nomeLimpo}_${Date.now()}.jpg`;
-
                 const { data: uploadData, error: uploadError } = await supabaseClient
                     .storage.from('materiais-images')
-                    .upload(fileName, blob, {
-                        contentType: 'image/jpeg',
-                        upsert: true,
-                        cacheControl: '3600'
-                    });
-
+                    .upload(fileName, blob, { contentType: 'image/jpeg', upsert: true });
                 if (uploadError) {
                     console.error('Erro no upload:', uploadError);
-                    // Se o erro for de permissão, tenta salvar em Base64
-                    if (uploadError.message.includes('permission') || uploadError.message.includes('policy')) {
-                        console.log('Sem permissão para upload, salvando imagem em Base64');
-                        return imageBase64;
-                    }
-                    throw uploadError;
+                    return imageBase64;
                 }
-
-                const { data: urlData } = supabaseClient.storage
-                    .from('materiais-images')
-                    .getPublicUrl(fileName);
-
-                console.log('✅ Imagem enviada com sucesso:', urlData.publicUrl);
+                const { data: urlData } = supabaseClient.storage.from('materiais-images').getPublicUrl(fileName);
                 return urlData.publicUrl;
             } catch (error) {
                 console.error('Erro upload imagem:', error);
-                showNotification('Erro ao salvar imagem na nuvem. A foto será salva localmente.', 'warning');
-                return imageBase64; // Fallback: salva em Base64
+                return imageBase64;
             }
         }
 
         // ============================================
-        // FUNÇÃO SIMPLIFICADA DE INICIALIZAÇÃO
+        // INICIALIZAÇÃO SUPABASE
         // ============================================
         async function initializeSupabase() {
             showLoading();
             updateLoadingProgress(10, 'Conectando ao Supabase...');
-
             try {
                 supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
                 updateLoadingProgress(30, 'Verificando conexão...');
-
-                // Testa conexão com a tabela materiais_consumo
                 const { error: tableError } = await supabaseClient
                     .from('materiais_consumo')
                     .select('id')
                     .limit(1);
-
                 if (tableError && tableError.code !== '42P01') {
                     console.warn('Erro na tabela:', tableError);
                     isSupabaseConnected = false;
@@ -1786,24 +1814,18 @@
                     isSupabaseConnected = true;
                     console.log('✅ Conectado ao Supabase');
                 }
-
                 updateConnectionStatus();
                 updateLoadingProgress(70, 'Carregando materiais...');
                 await carregarMateriais();
                 updateLoadingProgress(100, 'Sistema pronto!');
-
-                setTimeout(() => {
-                    hideLoading();
-                }, 500);
+                setTimeout(() => { hideLoading(); }, 500);
             } catch (error) {
                 console.error('Erro Supabase:', error);
                 isSupabaseConnected = false;
                 updateConnectionStatus();
                 updateLoadingProgress(100, 'Modo offline ativado');
                 carregarMateriaisLocal();
-                setTimeout(() => {
-                    hideLoading();
-                }, 500);
+                setTimeout(() => { hideLoading(); }, 500);
             }
         }
 
@@ -1833,10 +1855,7 @@
                     .order('nome');
                 if (error) throw error;
                 if (data) {
-                    materiais = data.map(m => ({
-                        ...m,
-                        codigo: m.codigo || null
-                    }));
+                    materiais = data.map(m => ({ ...m, codigo: m.codigo || null }));
                     salvarLocal();
                     atualizarTabela();
                     atualizarDashboard();
@@ -1876,13 +1895,8 @@
             showNotification('Enviando dados para a nuvem...', 'info');
             let success = 0;
             for (const material of materiais) {
-                const materialParaEnviar = {
-                    ...material,
-                    codigo: material.codigo || null
-                };
-                const { error } = await supabaseClient
-                    .from('materiais_consumo')
-                    .upsert(materialParaEnviar);
+                const materialParaEnviar = { ...material, codigo: material.codigo || null };
+                const { error } = await supabaseClient.from('materiais_consumo').upsert(materialParaEnviar);
                 if (!error) success++;
             }
             showNotification(`${success} materiais sincronizados!`, 'success');
@@ -1900,10 +1914,7 @@
                 showNotification('Erro ao baixar!', 'error');
                 return;
             }
-            materiais = data.map(m => ({
-                ...m,
-                codigo: m.codigo || null
-            }));
+            materiais = data.map(m => ({ ...m, codigo: m.codigo || null }));
             salvarLocal();
             atualizarTabela();
             atualizarDashboard();
@@ -1913,17 +1924,15 @@
         }
 
         // ============================================
-        // FUNÇÃO PARA EXCLUIR MATERIAL DIRETAMENTE
+        // FUNÇÃO PARA EXCLUIR MATERIAL DIRETO
         // ============================================
         async function excluirMaterialDireto(id, nome) {
             if (!confirm(`Tem certeza que deseja excluir o material "${nome}"?`)) return;
-
             materiais = materiais.filter(m => m.id !== id);
             salvarLocal();
             atualizarTabela();
             atualizarDashboard();
             atualizarGrafico();
-
             if (isSupabaseConnected) {
                 const { error } = await supabaseClient.from('materiais_consumo').delete().eq('id', id);
                 if (error) {
@@ -2004,7 +2013,6 @@
                 showNotification('Informe o peso em quilogramas!', 'error');
                 return;
             }
-
             if (codigo && materiais.some(m => m.codigo === codigo)) {
                 showNotification('Já existe um material com este código!', 'error');
                 return;
@@ -2040,13 +2048,8 @@
             showNotification('Material cadastrado com sucesso!', 'success');
 
             if (isSupabaseConnected) {
-                const { error } = await supabaseClient
-                    .from('materiais_consumo')
-                    .insert(novoMaterial);
-                if (error) {
-                    console.error('Erro ao salvar na nuvem:', error);
-                    showNotification('Erro ao salvar no banco de dados!', 'error');
-                }
+                const { error } = await supabaseClient.from('materiais_consumo').insert(novoMaterial);
+                if (error) console.error('Erro ao salvar na nuvem:', error);
             }
         }
 
@@ -2063,7 +2066,6 @@
         function abrirEditar(id) {
             const material = materiais.find(m => m.id === id);
             if (!material) return;
-
             document.getElementById('editMaterialId').value = material.id;
             document.getElementById('editCodigo').value = material.codigo || '';
             document.getElementById('editNome').value = material.nome;
@@ -2074,7 +2076,6 @@
             document.getElementById('editEstoqueMinimo').value = material.estoque_minimo || 0;
             document.getElementById('editLocalizacao').value = material.localizacao || '';
             document.getElementById('editObservacoes').value = material.observacoes || '';
-
             document.getElementById('editKgDiv').style.display = material.unidade === 'kg' ? 'block' : 'none';
             document.getElementById('editModal').style.display = 'flex';
         }
@@ -2083,14 +2084,11 @@
             const id = parseInt(document.getElementById('editMaterialId').value);
             const index = materiais.findIndex(m => m.id === id);
             if (index === -1) return;
-
             const novoCodigo = document.getElementById('editCodigo').value.trim();
-
             if (novoCodigo && materiais.some(m => m.codigo === novoCodigo && m.id !== id)) {
                 showNotification('Já existe um material com este código!', 'error');
                 return;
             }
-
             const materialAtualizado = {
                 ...materiais[index],
                 codigo: novoCodigo || null,
@@ -2104,25 +2102,16 @@
                 observacoes: document.getElementById('editObservacoes').value.trim(),
                 updated_at: new Date().toISOString()
             };
-
             materiais[index] = materialAtualizado;
             salvarLocal();
             atualizarTabela();
             atualizarDashboard();
             atualizarGrafico();
             fecharModal();
-
             if (isSupabaseConnected) {
-                const { error } = await supabaseClient
-                    .from('materiais_consumo')
-                    .update(materialAtualizado)
-                    .eq('id', id);
-                if (error) {
-                    console.error('Erro ao atualizar:', error);
-                    showNotification('Erro ao atualizar no banco!', 'error');
-                } else {
-                    showNotification('Material atualizado com sucesso!', 'success');
-                }
+                const { error } = await supabaseClient.from('materiais_consumo').update(materialAtualizado).eq('id', id);
+                if (error) showNotification('Erro ao atualizar no banco!', 'error');
+                else showNotification('Material atualizado com sucesso!', 'success');
             } else {
                 showNotification('Material atualizado localmente!', 'success');
             }
@@ -2132,19 +2121,14 @@
             const id = parseInt(document.getElementById('editMaterialId').value);
             const material = materiais.find(m => m.id === id);
             if (!material) return;
-
             if (!confirm('Tem certeza que deseja excluir este material?')) return;
-
             materiais = materiais.filter(m => m.id !== id);
             salvarLocal();
             atualizarTabela();
             atualizarDashboard();
             atualizarGrafico();
             fecharModal();
-
-            if (isSupabaseConnected) {
-                await supabaseClient.from('materiais_consumo').delete().eq('id', id);
-            }
+            if (isSupabaseConnected) await supabaseClient.from('materiais_consumo').delete().eq('id', id);
             showNotification('Material excluído!', 'success');
         }
 
@@ -2170,29 +2154,19 @@
                 m.tipo.toLowerCase().includes(filtro) ||
                 (m.localizacao && m.localizacao.toLowerCase().includes(filtro))
             );
-
             const tipoFiltro = document.querySelector('.tab-button.active')?.dataset.tab === 'catalogo-geral' ?
                 (document.getElementById('filterNormalBtn')?.classList.contains('active') ? 'normal' :
                     document.getElementById('filterBaixoBtn')?.classList.contains('active') ? 'baixo' : 'todos') : 'todos';
-
             if (tipoFiltro === 'normal') {
-                filtered = filtered.filter(m => {
-                    const qtd = m.unidade === 'kg' ? m.quantidade : m.quantidade;
-                    return qtd > (m.estoque_minimo || 0);
-                });
+                filtered = filtered.filter(m => { const qtd = m.unidade === 'kg' ? m.quantidade : m.quantidade; return qtd > (m.estoque_minimo || 0); });
             } else if (tipoFiltro === 'baixo') {
-                filtered = filtered.filter(m => {
-                    const qtd = m.unidade === 'kg' ? m.quantidade : m.quantidade;
-                    return qtd <= (m.estoque_minimo || 0) && qtd > 0;
-                });
+                filtered = filtered.filter(m => { const qtd = m.unidade === 'kg' ? m.quantidade : m.quantidade; return qtd <= (m.estoque_minimo || 0) && qtd > 0; });
             }
-
             const tbody = document.getElementById('materiaisTableBody');
             if (filtered.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">Nenhum material encontrado</td></tr>';
                 return;
             }
-
             let html = '';
             filtered.forEach(m => {
                 const quantidadeExibida = m.unidade === 'kg' ? `${m.quantidade.toFixed(2)} kg` : `${Math.floor(m.quantidade)} un`;
@@ -2203,7 +2177,6 @@
                     `<img src="${m.imagem}" class="thumbnail-img" onclick="viewImage('${m.imagem}')" style="cursor:pointer;">` :
                     '<div style="width:40px;height:40px;background:#2d2d44;border-radius:6px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-image" style="color:#7f8c8d;"></i></div>';
                 const codigoHtml = m.codigo ? `<span class="codigo-badge">${escapeHtml(m.codigo)}</span>` : '<span style="color: var(--text-muted);">---</span>';
-
                 html += `<tr>
                     <td>${codigoHtml}</td>
                     <td>${fotoHtml}</td>
@@ -2230,40 +2203,30 @@
             let baixoEstoque = 0;
             let normal = 0;
             let esgotado = 0;
-
             materiais.forEach(m => {
                 tipos.add(m.tipo);
                 const qtd = m.unidade === 'kg' ? m.quantidade : m.quantidade;
                 if (m.unidade === 'kg') totalKg += m.quantidade;
                 else totalUnidades += m.quantidade;
-
                 if (qtd <= 0) esgotado++;
                 else if (qtd <= (m.estoque_minimo || 0)) baixoEstoque++;
                 else normal++;
             });
-
             document.getElementById('totalMateriais').textContent = materiais.length;
             document.getElementById('totalUnidades').textContent = totalUnidades;
             document.getElementById('totalKg').textContent = totalKg.toFixed(2);
             document.getElementById('estoqueBaixoCount').textContent = baixoEstoque;
-
-            const total = materiais.length;
-            const normalPercent = total > 0 ? Math.round((normal / total) * 100) : 0;
-            const baixoPercent = total > 0 ? Math.round((baixoEstoque / total) * 100) : 0;
-            const esgotadoPercent = total > 0 ? Math.round((esgotado / total) * 100) : 0;
-
+            const total = materiais.length || 1;
+            const normalPercent = Math.round((normal / total) * 100);
+            const baixoPercent = Math.round((baixoEstoque / total) * 100);
+            const esgotadoPercent = Math.round((esgotado / total) * 100);
             document.getElementById('normalPercent').textContent = `${normalPercent}%`;
             document.getElementById('baixoPercent').textContent = `${baixoPercent}%`;
             document.getElementById('esgotadoPercent').textContent = `${esgotadoPercent}%`;
             document.getElementById('normalBar').style.width = `${normalPercent}%`;
             document.getElementById('baixoBar').style.width = `${baixoPercent}%`;
             document.getElementById('esgotadoBar').style.width = `${esgotadoPercent}%`;
-
-            const baixoLista = materiais.filter(m => {
-                const qtd = m.unidade === 'kg' ? m.quantidade : m.quantidade;
-                return qtd <= (m.estoque_minimo || 0) && qtd > 0;
-            });
-
+            const baixoLista = materiais.filter(m => { const qtd = m.unidade === 'kg' ? m.quantidade : m.quantidade; return qtd <= (m.estoque_minimo || 0) && qtd > 0; });
             const container = document.getElementById('estoqueBaixoList');
             if (baixoLista.length === 0) {
                 container.innerHTML = '<p style="text-align:center; color:var(--success-color);">✅ Nenhum material com estoque baixo!</p>';
@@ -2284,7 +2247,6 @@
             const ctx = document.getElementById('tipoChart').getContext('2d');
             const tipos = {};
             materiais.forEach(m => { tipos[m.tipo] = (tipos[m.tipo] || 0) + 1; });
-
             if (chartInstance) chartInstance.destroy();
             if (Object.keys(tipos).length > 0) {
                 chartInstance = new Chart(ctx, {
@@ -2296,11 +2258,7 @@
                             backgroundColor: ['#00b894', '#3498db', '#f39c12', '#e74c3c', '#9b59b6', '#1abc9c', '#e67e22', '#2ecc71']
                         }]
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: true,
-                        plugins: { legend: { labels: { color: '#ecf0f1' } } }
-                    }
+                    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: '#ecf0f1' } } } }
                 });
             }
         }
@@ -2325,6 +2283,19 @@
             showNotification('Exportado com sucesso!', 'success');
         }
 
+        // FUNÇÃO DE BACKUP JSON
+        function backupToJson() {
+            const dataStr = JSON.stringify(materiais, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `backup_materiais_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification('Backup JSON salvo no computador!', 'success');
+        }
+
         function viewImage(imageSrc) {
             const overlay = document.createElement('div');
             overlay.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);display:flex;justify-content:center;align-items:center;z-index:9999;cursor:zoom-out;`;
@@ -2345,11 +2316,41 @@
         }
 
         // ============================================
+        // ZOOM (NOVO - BOTÕES VERTICAIS)
+        // ============================================
+        function setupZoom() {
+            const zoomBtns = document.querySelectorAll('.zoom-vertical-btn');
+            zoomBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const percent = parseInt(btn.dataset.zoom);
+                    document.body.classList.remove('zoom-10', 'zoom-15', 'zoom-20');
+                    if (percent === 10) document.body.classList.add('zoom-10');
+                    else if (percent === 15) document.body.classList.add('zoom-15');
+                    else if (percent === 20) document.body.classList.add('zoom-20');
+                    else if (percent === 0) { /* normal */ }
+                    localStorage.setItem('zoomLevel', percent);
+                    showNotification(`Zoom ${percent === 0 ? 'restaurado' : `aumentado em ${percent}%`}`, 'success');
+                });
+            });
+            const savedZoom = localStorage.getItem('zoomLevel');
+            if (savedZoom && savedZoom !== '0') {
+                document.body.classList.add(`zoom-${savedZoom}`);
+            }
+        }
+
+        // ============================================
         // EVENTOS E INICIALIZAÇÃO
         // ============================================
         function initializeSystem() {
             setupImageCapture();
-
+            setupZoom();
+            
+            // Evento do botão de backup vertical
+            const backupVerticalBtn = document.getElementById('backupJsonVerticalBtn');
+            if (backupVerticalBtn) {
+                backupVerticalBtn.addEventListener('click', backupToJson);
+            }
+            
             document.getElementById('saveMaterialBtn').addEventListener('click', salvarMaterial);
             document.getElementById('clearMaterialBtn').addEventListener('click', limparFormulario);
             document.getElementById('searchMaterial').addEventListener('input', () => atualizarTabela());
@@ -2358,7 +2359,7 @@
             document.getElementById('syncDownBtn').addEventListener('click', syncFromCloud);
             document.getElementById('refreshDataBtn').addEventListener('click', () => carregarMateriais());
             document.getElementById('floatingSyncBtn').addEventListener('click', syncToCloud);
-
+            
             document.getElementById('filterAllBtn').addEventListener('click', () => {
                 document.querySelectorAll('#filterAllBtn, #filterNormalBtn, #filterBaixoBtn').forEach(btn => btn.classList.remove('active'));
                 document.getElementById('filterAllBtn').classList.add('active');
@@ -2374,19 +2375,19 @@
                 document.getElementById('filterBaixoBtn').classList.add('active');
                 atualizarTabela();
             });
-
+            
             document.getElementById('updateMaterialBtn').addEventListener('click', atualizarMaterial);
             document.getElementById('deleteMaterialBtn').addEventListener('click', excluirMaterial);
             document.getElementById('closeEditModalBtn').addEventListener('click', fecharModal);
             document.getElementById('cancelEditBtn').addEventListener('click', fecharModal);
-
+            
             document.getElementById('matUnidade').addEventListener('change', function () {
                 document.getElementById('matKgField').style.display = this.value === 'kg' ? 'block' : 'none';
             });
             document.getElementById('editUnidade').addEventListener('change', function () {
                 document.getElementById('editKgDiv').style.display = this.value === 'kg' ? 'block' : 'none';
             });
-
+            
             document.querySelectorAll('.tab-button').forEach(btn => {
                 btn.addEventListener('click', function () {
                     const tabId = this.dataset.tab;
