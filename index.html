@@ -116,8 +116,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .loading-text {
@@ -666,6 +671,8 @@
         .codigo-item {
             background: linear-gradient(135deg, rgba(0, 184, 148, 0.1), rgba(0, 168, 132, 0.05));
             border-left: 3px solid var(--material-color);
+            border-radius: 8px;
+            padding: 0 15px;
         }
 
         /* ÁREA DE FOTO */
@@ -1279,7 +1286,8 @@
                                 <div class="form-group codigo-item">
                                     <label for="matCodigo">Código do Item</label>
                                     <input type="text" id="matCodigo" placeholder="Ex: MAT-001, PAR-3.8, Personalizado">
-                                    <small style="color: var(--text-muted); font-size: 11px;">Digite um código único para identificar este material</small>
+                                    <small style="color: var(--text-muted); font-size: 11px;">Digite um código único
+                                        para identificar este material</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="matNome" class="required">Nome do Material</label>
@@ -1467,7 +1475,8 @@
                     <form id="editMaterialForm">
                         <input type="hidden" id="editMaterialId">
                         <div class="form-row">
-                            <div class="form-group"><label>Código</label><input type="text" id="editCodigo" placeholder="Código do item"></div>
+                            <div class="form-group"><label>Código</label><input type="text" id="editCodigo"
+                                    placeholder="Código do item"></div>
                             <div class="form-group"><label>Nome</label><input type="text" id="editNome" required></div>
                             <div class="form-group"><label>Tipo</label><select id="editTipo" required>
                                     <option value="Parafuso">Parafuso</option>
@@ -1476,6 +1485,9 @@
                                     <option value="Abraçadeira">Abraçadeira</option>
                                     <option value="Arruela">Arruela</option>
                                     <option value="Porca">Porca</option>
+                                    <option value="Cabo">Cabo</option>
+                                    <option value="Conector">Conector</option>
+                                    <option value="Fita">Fita</option>
                                     <option value="Outro">Outro</option>
                                 </select></div>
                         </div>
@@ -1496,7 +1508,7 @@
                             </div>
                         </div>
                         <div class="form-group"><label>Observações</label><textarea id="editObservacoes"
-                                    rows="2"></textarea></div>
+                                rows="2"></textarea></div>
                         <div class="btn-group">
                             <button type="button" class="btn btn-success" id="updateMaterialBtn">Atualizar</button>
                             <button type="button" class="btn btn-danger" id="deleteMaterialBtn">Excluir</button>
@@ -1516,7 +1528,7 @@
     <footer class="site-footer">
         <div class="footer-content">
             <p>Desenvolvido por Fábio Mendes Rodrigues, Planejador da F.W. Company</p>
-            <p class="footer-version">Sistema de Gestão de Materiais de Consumo - v1.0</p>
+            <p class="footer-version">Sistema de Gestão de Materiais de Consumo - v1.2 (com código do item)</p>
         </div>
     </footer>
 
@@ -1526,7 +1538,7 @@
         // ============================================
         const SUPABASE_URL = 'https://eokhafnfmynhridksnuh.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVva2hhZm5mbXluaHJpZGtzbnVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxMzYwMDIsImV4cCI6MjA4NTcxMjAwMn0.-RZtzUYpdOI4_WKOmP9lqw9guJmvh8XFeAL6UXhA4vo';
-        
+
         // ============================================
         // VARIÁVEIS GLOBAIS
         // ============================================
@@ -1535,6 +1547,7 @@
         let currentUser = null;
         let materiais = [];
         let chartInstance = null;
+        let bucketDisponivel = false;
 
         // ============================================
         // FUNÇÕES DA TELA DE LOADING
@@ -1547,8 +1560,7 @@
             loadingProgress = 0;
             const progressBar = document.getElementById('loadingProgressBar');
             if (progressBar) progressBar.style.width = '0%';
-            
-            // Simular progresso de carregamento
+
             loadingInterval = setInterval(() => {
                 if (loadingProgress < 90) {
                     loadingProgress += Math.random() * 10;
@@ -1560,10 +1572,9 @@
         }
 
         function hideLoading() {
-            // Completar a barra de progresso
             const progressBar = document.getElementById('loadingProgressBar');
             if (progressBar) progressBar.style.width = '100%';
-            
+
             setTimeout(() => {
                 if (loadingInterval) clearInterval(loadingInterval);
                 document.getElementById('loadingOverlay').style.display = 'none';
@@ -1574,7 +1585,7 @@
             const progressBar = document.getElementById('loadingProgressBar');
             const loadingText = document.querySelector('.loading-text');
             const loadingSubtext = document.querySelector('.loading-subtext');
-            
+
             if (progressBar) progressBar.style.width = percent + '%';
             if (loadingText && message) loadingText.textContent = message;
             if (loadingSubtext) loadingSubtext.textContent = 'Aguarde, estamos conectando ao servidor...';
@@ -1651,7 +1662,7 @@
                             .select('id')
                             .eq('username', currentUser.username)
                             .single();
-                        
+
                         if (error || !data) {
                             logout();
                             return;
@@ -1680,88 +1691,107 @@
         }
 
         // ============================================
-        // FUNÇÃO PARA CRIAR BUCKET AUTOMATICAMENTE
+        // FUNÇÃO PARA VERIFICAR BUCKET (SEM CRIAR)
         // ============================================
-        async function criarBucketSeNaoExistir() {
+        async function verificarBucket() {
             if (!isSupabaseConnected) return false;
             try {
                 const { data: buckets, error: listError } = await supabaseClient.storage.listBuckets();
-                if (listError) throw listError;
-
-                const bucketExiste = buckets.some(b => b.id === 'materiais-images');
-                if (!bucketExiste) {
-                    console.log('📦 Criando bucket materiais-images...');
-                    const { error: createError } = await supabaseClient.storage.createBucket('materiais-images', {
-                        public: true,
-                        fileSizeLimit: 5242880
-                    });
-                    if (createError) throw createError;
-                    console.log('✅ Bucket criado com sucesso!');
+                if (listError) {
+                    console.error('Erro ao listar buckets:', listError);
+                    return false;
                 }
+
+                bucketDisponivel = buckets.some(b => b.id === 'materiais-images');
+
+                if (!bucketDisponivel) {
+                    console.warn('⚠️ Bucket "materiais-images" não encontrado!');
+                    showNotification('⚠️ Bucket de imagens não configurado. As fotos serão salvas apenas localmente.', 'warning');
+                    return false;
+                }
+
+                console.log('✅ Bucket materiais-images encontrado e disponível');
                 return true;
             } catch (error) {
-                console.error('Erro ao criar bucket:', error);
+                console.error('Erro ao verificar bucket:', error);
                 return false;
             }
         }
 
         // ============================================
-        // FUNÇÃO PARA UPLOAD DE IMAGEM
+        // FUNÇÃO SIMPLIFICADA PARA UPLOAD DE IMAGEM
         // ============================================
         async function uploadImageToStorage(imageBase64, nome) {
-            if (!imageBase64 || !nome || !isSupabaseConnected) return null;
-            try {
-                await criarBucketSeNaoExistir();
+            if (!imageBase64 || !nome) return null;
 
+            try {
+                // Tenta fazer upload diretamente, sem verificar bucket primeiro
                 const base64Response = await fetch(imageBase64);
                 const blob = await base64Response.blob();
                 const nomeLimpo = nome.replace(/[^a-z0-9]/gi, '_').substring(0, 50);
                 const fileName = `material_${nomeLimpo}_${Date.now()}.jpg`;
 
                 const { data: uploadData, error: uploadError } = await supabaseClient
-                    .storage.from('materiais-images').upload(fileName, blob, {
+                    .storage.from('materiais-images')
+                    .upload(fileName, blob, {
                         contentType: 'image/jpeg',
-                        upsert: true
+                        upsert: true,
+                        cacheControl: '3600'
                     });
 
-                if (uploadError) throw uploadError;
+                if (uploadError) {
+                    console.error('Erro no upload:', uploadError);
+                    // Se o erro for de permissão, tenta salvar em Base64
+                    if (uploadError.message.includes('permission') || uploadError.message.includes('policy')) {
+                        console.log('Sem permissão para upload, salvando imagem em Base64');
+                        return imageBase64;
+                    }
+                    throw uploadError;
+                }
 
-                const { data: urlData } = supabaseClient.storage.from('materiais-images').getPublicUrl(fileName);
+                const { data: urlData } = supabaseClient.storage
+                    .from('materiais-images')
+                    .getPublicUrl(fileName);
+
+                console.log('✅ Imagem enviada com sucesso:', urlData.publicUrl);
                 return urlData.publicUrl;
             } catch (error) {
                 console.error('Erro upload imagem:', error);
-                showNotification('Erro ao fazer upload da imagem. A foto será salva apenas localmente.', 'warning');
-                return null;
+                showNotification('Erro ao salvar imagem na nuvem. A foto será salva localmente.', 'warning');
+                return imageBase64; // Fallback: salva em Base64
             }
         }
 
         // ============================================
-        // FUNÇÕES SUPABASE
+        // FUNÇÃO SIMPLIFICADA DE INICIALIZAÇÃO
         // ============================================
         async function initializeSupabase() {
             showLoading();
             updateLoadingProgress(10, 'Conectando ao Supabase...');
-            
+
             try {
                 supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
                 updateLoadingProgress(30, 'Verificando conexão...');
-                
-                const { error } = await supabaseClient.from('materiais_consumo').select('id').limit(1);
-                if (error && error.code !== '42P01') {
-                    console.warn('Erro na conexão:', error);
+
+                // Testa conexão com a tabela materiais_consumo
+                const { error: tableError } = await supabaseClient
+                    .from('materiais_consumo')
+                    .select('id')
+                    .limit(1);
+
+                if (tableError && tableError.code !== '42P01') {
+                    console.warn('Erro na tabela:', tableError);
                     isSupabaseConnected = false;
                 } else {
                     isSupabaseConnected = true;
                     console.log('✅ Conectado ao Supabase');
-                    updateLoadingProgress(50, 'Configurando armazenamento...');
-                    await criarBucketSeNaoExistir();
                 }
 
                 updateConnectionStatus();
                 updateLoadingProgress(70, 'Carregando materiais...');
                 await carregarMateriais();
                 updateLoadingProgress(100, 'Sistema pronto!');
-                
+
                 setTimeout(() => {
                     hideLoading();
                 }, 500);
@@ -1797,10 +1827,16 @@
                 return;
             }
             try {
-                const { data, error } = await supabaseClient.from('materiais_consumo').select('*').order('nome');
+                const { data, error } = await supabaseClient
+                    .from('materiais_consumo')
+                    .select('*')
+                    .order('nome');
                 if (error) throw error;
                 if (data) {
-                    materiais = data;
+                    materiais = data.map(m => ({
+                        ...m,
+                        codigo: m.codigo || null
+                    }));
                     salvarLocal();
                     atualizarTabela();
                     atualizarDashboard();
@@ -1833,14 +1869,20 @@
         }
 
         async function syncToCloud() {
-            if (!isSupabaseConnected) { 
-                showNotification('Sem conexão com a nuvem!', 'error'); 
-                return; 
+            if (!isSupabaseConnected) {
+                showNotification('Sem conexão com a nuvem!', 'error');
+                return;
             }
             showNotification('Enviando dados para a nuvem...', 'info');
             let success = 0;
             for (const material of materiais) {
-                const { error } = await supabaseClient.from('materiais_consumo').upsert(material);
+                const materialParaEnviar = {
+                    ...material,
+                    codigo: material.codigo || null
+                };
+                const { error } = await supabaseClient
+                    .from('materiais_consumo')
+                    .upsert(materialParaEnviar);
                 if (!error) success++;
             }
             showNotification(`${success} materiais sincronizados!`, 'success');
@@ -1848,17 +1890,20 @@
         }
 
         async function syncFromCloud() {
-            if (!isSupabaseConnected) { 
-                showNotification('Sem conexão com a nuvem!', 'error'); 
-                return; 
+            if (!isSupabaseConnected) {
+                showNotification('Sem conexão com a nuvem!', 'error');
+                return;
             }
             showNotification('Baixando dados da nuvem...', 'info');
             const { data, error } = await supabaseClient.from('materiais_consumo').select('*');
-            if (error) { 
-                showNotification('Erro ao baixar!', 'error'); 
-                return; 
+            if (error) {
+                showNotification('Erro ao baixar!', 'error');
+                return;
             }
-            materiais = data;
+            materiais = data.map(m => ({
+                ...m,
+                codigo: m.codigo || null
+            }));
             salvarLocal();
             atualizarTabela();
             atualizarDashboard();
@@ -1960,22 +2005,27 @@
                 return;
             }
 
-            // Verificar se o código já existe
             if (codigo && materiais.some(m => m.codigo === codigo)) {
                 showNotification('Já existe um material com este código!', 'error');
                 return;
             }
 
             let imageUrl = null;
-            if (imageBase64 && isSupabaseConnected) {
+            if (imageBase64) {
                 imageUrl = await uploadImageToStorage(imageBase64, nome);
             }
 
             const novoMaterial = {
                 id: Date.now(),
                 codigo: codigo || null,
-                nome, tipo, unidade, quantidade, quilogramas,
-                estoque_minimo, localizacao, observacoes,
+                nome,
+                tipo,
+                unidade,
+                quantidade,
+                quilogramas,
+                estoque_minimo,
+                localizacao,
+                observacoes,
                 imagem: imageUrl || imageBase64 || null,
                 data_cadastro: new Date().toISOString().split('T')[0],
                 created_at: new Date().toISOString()
@@ -1990,8 +2040,13 @@
             showNotification('Material cadastrado com sucesso!', 'success');
 
             if (isSupabaseConnected) {
-                const { error } = await supabaseClient.from('materiais_consumo').insert(novoMaterial);
-                if (error) console.error('Erro ao salvar na nuvem:', error);
+                const { error } = await supabaseClient
+                    .from('materiais_consumo')
+                    .insert(novoMaterial);
+                if (error) {
+                    console.error('Erro ao salvar na nuvem:', error);
+                    showNotification('Erro ao salvar no banco de dados!', 'error');
+                }
             }
         }
 
@@ -2030,8 +2085,7 @@
             if (index === -1) return;
 
             const novoCodigo = document.getElementById('editCodigo').value.trim();
-            
-            // Verificar se o código já existe (exceto para o próprio material)
+
             if (novoCodigo && materiais.some(m => m.codigo === novoCodigo && m.id !== id)) {
                 showNotification('Já existe um material com este código!', 'error');
                 return;
@@ -2059,16 +2113,26 @@
             fecharModal();
 
             if (isSupabaseConnected) {
-                await supabaseClient.from('materiais_consumo').update(materialAtualizado).eq('id', id);
+                const { error } = await supabaseClient
+                    .from('materiais_consumo')
+                    .update(materialAtualizado)
+                    .eq('id', id);
+                if (error) {
+                    console.error('Erro ao atualizar:', error);
+                    showNotification('Erro ao atualizar no banco!', 'error');
+                } else {
+                    showNotification('Material atualizado com sucesso!', 'success');
+                }
+            } else {
+                showNotification('Material atualizado localmente!', 'success');
             }
-            showNotification('Material atualizado!', 'success');
         }
 
         async function excluirMaterial() {
             const id = parseInt(document.getElementById('editMaterialId').value);
             const material = materiais.find(m => m.id === id);
             if (!material) return;
-            
+
             if (!confirm('Tem certeza que deseja excluir este material?')) return;
 
             materiais = materiais.filter(m => m.id !== id);
@@ -2091,6 +2155,13 @@
         // ============================================
         // ATUALIZAR INTERFACE
         // ============================================
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         function atualizarTabela() {
             const filtro = document.getElementById('searchMaterial')?.value.toLowerCase() || '';
             let filtered = materiais.filter(m =>
@@ -2100,8 +2171,9 @@
                 (m.localizacao && m.localizacao.toLowerCase().includes(filtro))
             );
 
-            const tipoFiltro = document.getElementById('filterNormalBtn')?.classList.contains('active') ? 'normal' :
-                document.getElementById('filterBaixoBtn')?.classList.contains('active') ? 'baixo' : 'todos';
+            const tipoFiltro = document.querySelector('.tab-button.active')?.dataset.tab === 'catalogo-geral' ?
+                (document.getElementById('filterNormalBtn')?.classList.contains('active') ? 'normal' :
+                    document.getElementById('filterBaixoBtn')?.classList.contains('active') ? 'baixo' : 'todos') : 'todos';
 
             if (tipoFiltro === 'normal') {
                 filtered = filtered.filter(m => {
@@ -2127,24 +2199,24 @@
                 const kgExibido = m.quilogramas ? `${m.quilogramas.toFixed(2)} kg` : '-';
                 const status = (m.unidade === 'kg' ? m.quantidade : m.quantidade) <= (m.estoque_minimo || 0) ? 'Baixo estoque' : 'Normal';
                 const statusClass = status === 'Baixo estoque' ? 'status-baixo' : 'status-normal';
-                const fotoHtml = m.imagem && m.imagem.startsWith('http') ?
+                const fotoHtml = m.imagem && (m.imagem.startsWith('http') || m.imagem.startsWith('data:')) ?
                     `<img src="${m.imagem}" class="thumbnail-img" onclick="viewImage('${m.imagem}')" style="cursor:pointer;">` :
                     '<div style="width:40px;height:40px;background:#2d2d44;border-radius:6px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-image" style="color:#7f8c8d;"></i></div>';
-                const codigoHtml = m.codigo ? `<span class="codigo-badge">${m.codigo}</span>` : '<span style="color: var(--text-muted);">---</span>';
+                const codigoHtml = m.codigo ? `<span class="codigo-badge">${escapeHtml(m.codigo)}</span>` : '<span style="color: var(--text-muted);">---</span>';
 
                 html += `<tr>
                     <td>${codigoHtml}</td>
                     <td>${fotoHtml}</td>
-                    <td><strong>${m.nome}</strong></td>
-                    <td>${m.tipo}</td>
+                    <td><strong>${escapeHtml(m.nome)}</strong></td>
+                    <td>${escapeHtml(m.tipo)}</td>
                     <td>${m.unidade === 'kg' ? 'Kg' : 'Unidade'}</td>
                     <td>${quantidadeExibida}</td>
                     <td>${kgExibido}</td>
-                    <td>${m.localizacao || '-'}</td>
+                    <td>${escapeHtml(m.localizacao) || '-'}</td>
                     <td><span class="status-badge ${statusClass}">${status}</span></td>
                     <td class="action-buttons">
                         <button class="btn btn-sm btn-primary" onclick="abrirEditar(${m.id})"><i class="fas fa-edit"></i> Editar</button>
-                        <button class="btn btn-sm btn-danger" onclick="excluirMaterialDireto(${m.id}, '${m.nome.replace(/'/g, "\\'")}')"><i class="fas fa-trash"></i> Excluir</button>
+                        <button class="btn btn-sm btn-danger" onclick="excluirMaterialDireto(${m.id}, '${escapeHtml(m.nome).replace(/'/g, "\\'")}')"><i class="fas fa-trash"></i> Excluir</button>
                     </td>
                 </tr>`;
             });
@@ -2200,7 +2272,7 @@
                 baixoLista.forEach(m => {
                     const qtd = m.unidade === 'kg' ? `${m.quantidade.toFixed(2)} kg` : `${Math.floor(m.quantidade)} un`;
                     html += `<div style="padding: 10px; border-bottom: 1px solid var(--border-color);">
-                        <strong>${m.codigo ? `[${m.codigo}] ` : ''}${m.nome}</strong><br>
+                        <strong>${m.codigo ? `[${escapeHtml(m.codigo)}] ` : ''}${escapeHtml(m.nome)}</strong><br>
                         <small style="color: var(--text-muted);">Estoque: ${qtd} | Mínimo: ${m.estoque_minimo}</small>
                     </div>`;
                 });
