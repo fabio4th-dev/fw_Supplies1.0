@@ -10,6 +10,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
     <style>
         :root {
@@ -46,12 +48,10 @@
             flex-direction: column;
         }
 
-        /* ZOOM */
         body.zoom-10 { zoom: 1.1; }
         body.zoom-15 { zoom: 1.15; }
         body.zoom-20 { zoom: 1.2; }
 
-        /* BOTÕES VERTICAIS NO CANTO DIREITO */
         .vertical-zoom {
             position: fixed;
             right: 20px;
@@ -104,7 +104,6 @@
             background: linear-gradient(135deg, #2c3e50, #34495e);
         }
 
-        /* BOTÃO BACKUP VERTICAL */
         .vertical-backup {
             position: fixed;
             right: 20px;
@@ -160,7 +159,6 @@
             border-radius: 10px;
         }
 
-        /* TELA DE LOADING */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -250,7 +248,6 @@
             transition: width 0.3s ease;
         }
 
-        /* LOGIN */
         .login-container {
             display: flex;
             flex-direction: column;
@@ -407,7 +404,6 @@
             display: block;
         }
 
-        /* DASHBOARD */
         .dashboard-container {
             max-width: 1600px;
             margin: 0 auto;
@@ -488,11 +484,6 @@
             margin-right: 30px;
         }
 
-        .logo-delservin,
-        .logo-altercon {
-            margin-top: 15px;
-        }
-
         .logo-delservin img,
         .logo-altercon img {
             height: 50px;
@@ -500,7 +491,6 @@
             filter: brightness(1.1);
         }
 
-        /* Área do usuário no topo à direita */
         .user-info {
             position: absolute;
             top: 15px;
@@ -573,7 +563,6 @@
             font-weight: 700;
         }
 
-        /* ABAS */
         .tabs-container {
             background-color: var(--card-bg);
             border-radius: 12px;
@@ -652,7 +641,6 @@
             gap: 10px;
         }
 
-        /* CARDS */
         .cards-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -684,7 +672,137 @@
             gap: 10px;
         }
 
-        /* FORMULÁRIOS */
+        .qr-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .qr-modal-content {
+            background: linear-gradient(135deg, var(--card-bg), var(--secondary-color));
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid var(--material-color);
+            box-shadow: 0 20px 60px rgba(0, 184, 148, 0.3);
+        }
+
+        .qr-modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--primary-color);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .qr-modal-title {
+            font-size: 20px;
+            color: var(--material-color);
+        }
+
+        .qr-modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .qr-modal-close:hover {
+            color: var(--danger-color);
+            transform: scale(1.1);
+        }
+
+        .qr-modal-body {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .qr-code-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .qr-code-container canvas {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .qr-info-card {
+            background: var(--input-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+
+        .qr-info-row {
+            display: flex;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        .qr-info-row:last-child {
+            border-bottom: none;
+        }
+
+        .qr-info-label {
+            font-weight: 600;
+            width: 100px;
+            color: var(--material-color);
+        }
+
+        .qr-info-value {
+            flex: 1;
+            color: var(--text-color);
+        }
+
+        .qr-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .qr-download-btn {
+            background: linear-gradient(135deg, var(--material-color), #00a884);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qr-download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 184, 148, 0.4);
+        }
+
         .form-container {
             background-color: var(--card-bg);
             border-radius: 12px;
@@ -750,12 +868,6 @@
             box-shadow: 0 0 0 2px rgba(0, 184, 148, 0.2);
         }
 
-        input::placeholder,
-        textarea::placeholder {
-            color: var(--text-muted);
-        }
-
-        /* CÓDIGO DO ITEM - DESTAQUE */
         .codigo-item {
             background: linear-gradient(135deg, rgba(0, 184, 148, 0.1), rgba(0, 168, 132, 0.05));
             border-left: 3px solid var(--material-color);
@@ -763,7 +875,6 @@
             padding: 0 15px;
         }
 
-        /* ÁREA DE FOTO */
         .image-capture-container {
             background-color: var(--input-bg);
             border-radius: 10px;
@@ -812,7 +923,6 @@
             flex-wrap: wrap;
         }
 
-        /* BOTÕES */
         .btn {
             padding: 10px 20px;
             border: none;
@@ -839,10 +949,6 @@
         .btn-success {
             background: linear-gradient(135deg, #27ae60, #219653);
             color: white;
-        }
-
-        .btn-success:hover {
-            transform: translateY(-2px);
         }
 
         .btn-warning {
@@ -872,7 +978,11 @@
             font-size: 12px;
         }
 
-        /* BOTÃO FLUTUANTE */
+        .btn-info {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+        }
+
         .floating-btn {
             position: fixed;
             bottom: 30px;
@@ -898,11 +1008,6 @@
             box-shadow: 0 6px 20px rgba(0, 184, 148, 0.6);
         }
 
-        .floating-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* TABELA */
         .table-container {
             overflow-x: auto;
             background-color: var(--card-bg);
@@ -948,7 +1053,6 @@
             font-size: 12px;
         }
 
-        /* CÓDIGO BADGE */
         .codigo-badge {
             display: inline-block;
             background: rgba(0, 184, 148, 0.2);
@@ -961,7 +1065,6 @@
             border: 1px solid rgba(0, 184, 148, 0.3);
         }
 
-        /* STATUS BADGE */
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -984,7 +1087,6 @@
             border: 1px solid rgba(0, 184, 148, 0.3);
         }
 
-        /* PROGRESS BAR */
         .progress-container {
             margin-bottom: 18px;
         }
@@ -1010,7 +1112,6 @@
             transition: width 0.8s ease;
         }
 
-        /* PESQUISA */
         .search-box {
             position: relative;
             margin-bottom: 20px;
@@ -1029,7 +1130,6 @@
             color: var(--text-muted);
         }
 
-        /* MODAL */
         .modal {
             display: none;
             position: fixed;
@@ -1083,7 +1183,6 @@
             padding: 25px;
         }
 
-        /* NOTIFICAÇÃO */
         .notification {
             position: fixed;
             top: 100px;
@@ -1121,7 +1220,6 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
-        /* FOOTER */
         .site-footer {
             background-color: var(--primary-color);
             color: var(--text-muted);
@@ -1137,7 +1235,6 @@
             opacity: 0.7;
         }
 
-        /* MINIATURA NA TABELA */
         .thumbnail-img {
             width: 40px;
             height: 40px;
@@ -1213,15 +1310,11 @@
                 min-width: 60px;
                 font-size: 11px;
             }
-            .backup-vertical-btn i {
-                font-size: 14px;
-            }
         }
     </style>
 </head>
 
 <body>
-    <!-- TELA DE LOADING -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="loading-container">
             <div class="loading-logos">
@@ -1238,7 +1331,6 @@
         </div>
     </div>
 
-    <!-- BOTÕES VERTICAIS NO CANTO DIREITO -->
     <div class="vertical-zoom">
         <button class="zoom-vertical-btn" data-zoom="10" title="Aumentar 10%">+10%</button>
         <button class="zoom-vertical-btn" data-zoom="15" title="Aumentar 15%">+15%</button>
@@ -1253,7 +1345,6 @@
         </button>
     </div>
 
-    <!-- TELA DE LOGIN -->
     <div id="loginScreen" class="login-container" style="display: none;">
         <div class="login-box">
             <div class="login-header">
@@ -1287,7 +1378,6 @@
         </div>
     </div>
 
-    <!-- DASHBOARD -->
     <div id="dashboardScreen" class="dashboard-container" style="display: none;">
         <header class="dashboard-header">
             <div class="user-info">
@@ -1328,7 +1418,6 @@
             </div>
         </header>
 
-        <!-- ABAS -->
         <div class="tabs-container">
             <div class="tabs-header">
                 <button class="tab-button active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
@@ -1337,7 +1426,6 @@
                 <button class="tab-button" data-tab="database"><i class="fas fa-database"></i> Banco de Dados</button>
             </div>
 
-            <!-- ABA 1: DASHBOARD -->
             <div id="dashboard" class="tab-content active">
                 <h2 class="section-title"><i class="fas fa-chart-line"></i> Dashboard de Materiais</h2>
                 <div class="cards-container">
@@ -1375,7 +1463,6 @@
                 </div>
             </div>
 
-            <!-- ABA 2: CADASTRO DE MATERIAIS COM FOTO -->
             <div id="cadastro-materiais" class="tab-content">
                 <h2 class="section-title"><i class="fas fa-plus-circle"></i> Cadastrar Novo Material</h2>
                 <div class="form-container">
@@ -1437,7 +1524,6 @@
                             </div>
                         </div>
 
-                        <!-- ÁREA DE FOTO -->
                         <div class="form-section">
                             <h3 class="form-section-title"><i class="fas fa-image"></i> Fotografia do Material</h3>
                             <div class="image-capture-container">
@@ -1467,7 +1553,6 @@
                 </div>
             </div>
 
-            <!-- ABA 3: CATÁLOGO GERAL -->
             <div id="catalogo-geral" class="tab-content">
                 <h2 class="section-title"><i class="fas fa-list"></i> Catálogo de Materiais</h2>
                 <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchMaterial" placeholder="Buscar por código, nome, tipo, localização..."></div>
@@ -1494,13 +1579,12 @@
                             </tr>
                         </thead>
                         <tbody id="materiaisTableBody">
-                            <tr><td colspan="10" style="text-align:center;">Carregando...</td></tr>
+                            <tr><td colspan="10" style="text-align:center;">Carregando...</td><tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- ABA 4: BANCO DE DADOS -->
             <div id="database" class="tab-content">
                 <h2 class="section-title"><i class="fas fa-database"></i> Banco de Dados Online</h2>
                 <div class="form-container">
@@ -1533,7 +1617,6 @@
             </div>
         </div>
 
-        <!-- MODAL EDITAR -->
         <div id="editModal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1580,9 +1663,25 @@
                 </div>
             </div>
         </div>
+
+        <div id="qrModal" class="qr-modal">
+            <div class="qr-modal-content">
+                <div class="qr-modal-header">
+                    <h3 class="qr-modal-title"><i class="fas fa-qrcode"></i> QR Code do Material</h3>
+                    <button class="qr-modal-close" id="closeQrModalBtn">&times;</button>
+                </div>
+                <div class="qr-modal-body">
+                    <div id="qrCodeContainer" class="qr-code-container"></div>
+                    <div id="qrMaterialInfo" class="qr-info-card"></div>
+                    <div class="qr-actions">
+                        <button class="qr-download-btn" id="downloadQrBtn"><i class="fas fa-download"></i> Baixar QR Code</button>
+                        <button class="qr-download-btn" id="copyLinkBtn"><i class="fas fa-copy"></i> Copiar Link</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- BOTÃO FLUTUANTE PARA SUBIR PARA NUVEM -->
     <button class="floating-btn" id="floatingSyncBtn" title="Sincronizar com a Nuvem">
         <i class="fas fa-cloud-upload-alt"></i>
     </button>
@@ -1590,14 +1689,11 @@
     <footer class="site-footer">
         <div class="footer-content">
             <p>Desenvolvido por Fábio Mendes Rodrigues, Planejador da F.W. Company</p>
-            <p class="footer-version">Sistema de Gestão de Materiais de Consumo - v1.3 (com código do item)</p>
+            <p class="footer-version">Sistema de Gestão de Materiais de Consumo - v2.1</p>
         </div>
     </footer>
 
     <script>
-        // ============================================
-        // CONFIGURAÇÃO DO SUPABASE
-        // ============================================
         const SUPABASE_URL = 'https://eokhafnfmynhridksnuh.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVva2hhZm5mbXluaHJpZGtzbnVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxMzYwMDIsImV4cCI6MjA4NTcxMjAwMn0.-RZtzUYpdOI4_WKOmP9lqw9guJmvh8XFeAL6UXhA4vo';
 
@@ -1607,10 +1703,6 @@
         let materiais = [];
         let chartInstance = null;
         let bucketDisponivel = false;
-
-        // ============================================
-        // FUNÇÕES DA TELA DE LOADING
-        // ============================================
         let loadingProgress = 0;
         let loadingInterval = null;
 
@@ -1619,7 +1711,6 @@
             loadingProgress = 0;
             const progressBar = document.getElementById('loadingProgressBar');
             if (progressBar) progressBar.style.width = '0%';
-
             loadingInterval = setInterval(() => {
                 if (loadingProgress < 90) {
                     loadingProgress += Math.random() * 10;
@@ -1647,9 +1738,6 @@
             loadingProgress = percent;
         }
 
-        // ============================================
-        // FUNÇÕES DE AUTENTICAÇÃO (VIA SUPABASE)
-        // ============================================
         async function login() {
             const username = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
@@ -1744,9 +1832,6 @@
             document.getElementById('userRoleBadge').textContent = currentUser.role.toUpperCase();
         }
 
-        // ============================================
-        // FUNÇÃO PARA VERIFICAR BUCKET
-        // ============================================
         async function verificarBucket() {
             if (!isSupabaseConnected) return false;
             try {
@@ -1769,9 +1854,6 @@
             }
         }
 
-        // ============================================
-        // FUNÇÃO PARA UPLOAD DE IMAGEM
-        // ============================================
         async function uploadImageToStorage(imageBase64, nome) {
             if (!imageBase64 || !nome) return null;
             try {
@@ -1794,9 +1876,6 @@
             }
         }
 
-        // ============================================
-        // INICIALIZAÇÃO SUPABASE
-        // ============================================
         async function initializeSupabase() {
             showLoading();
             updateLoadingProgress(10, 'Conectando ao Supabase...');
@@ -1923,9 +2002,6 @@
             document.getElementById('lastSyncTime').textContent = new Date().toLocaleString();
         }
 
-        // ============================================
-        // FUNÇÃO PARA EXCLUIR MATERIAL DIRETO
-        // ============================================
         async function excluirMaterialDireto(id, nome) {
             if (!confirm(`Tem certeza que deseja excluir o material "${nome}"?`)) return;
             materiais = materiais.filter(m => m.id !== id);
@@ -1946,9 +2022,109 @@
             }
         }
 
-        // ============================================
-        // CONFIGURAÇÃO DE FOTO
-        // ============================================
+        function gerarLinkVisualizacao(material) {
+            return `https://fabio4th-dev.github.io/fw_Supplies1.0/?item=${material.id}`;
+        }
+
+        function abrirQrCode(material) {
+            const link = gerarLinkVisualizacao(material);
+            
+            const qrContainer = document.getElementById('qrCodeContainer');
+            qrContainer.innerHTML = '';
+            
+            new QRCode(qrContainer, {
+                text: link,
+                width: 200,
+                height: 200,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.L
+            });
+            
+            setTimeout(() => {
+                const qrCanvas = qrContainer.querySelector('canvas');
+                if (qrCanvas) {
+                    qrCanvas.style.width = '100%';
+                    qrCanvas.style.height = '100%';
+                    qrCanvas.style.imageRendering = 'crisp-edges';
+                    qrCanvas.style.imageRendering = 'pixelated';
+                }
+            }, 100);
+            
+            const infoContainer = document.getElementById('qrMaterialInfo');
+            const quantidadeExibida = material.unidade === 'kg' ? `${material.quantidade.toFixed(2)} kg` : `${Math.floor(material.quantidade)} un`;
+            const kgExibido = material.quilogramas ? `${material.quilogramas.toFixed(2)} kg` : '-';
+            const statusText = (material.unidade === 'kg' ? material.quantidade : material.quantidade) <= (material.estoque_minimo || 0) ? 'Baixo Estoque' : 'Normal';
+            const statusClass = statusText === 'Baixo Estoque' ? 'status-baixo' : 'status-normal';
+            
+            infoContainer.innerHTML = `
+                <div class="qr-info-row">
+                    <div class="qr-info-label"><i class="fas fa-barcode"></i> Código:</div>
+                    <div class="qr-info-value"><span class="codigo-badge">${escapeHtml(material.codigo || '---')}</span></div>
+                </div>
+                <div class="qr-info-row">
+                    <div class="qr-info-label"><i class="fas fa-tag"></i> Nome:</div>
+                    <div class="qr-info-value"><strong>${escapeHtml(material.nome)}</strong></div>
+                </div>
+                <div class="qr-info-row">
+                    <div class="qr-info-label"><i class="fas fa-boxes"></i> Tipo:</div>
+                    <div class="qr-info-value">${escapeHtml(material.tipo)}</div>
+                </div>
+                <div class="qr-info-row">
+                    <div class="qr-info-label"><i class="fas fa-ruler"></i> Unidade:</div>
+                    <div class="qr-info-value">${material.unidade === 'kg' ? 'Quilograma (kg)' : 'Unidade (peça)'}</div>
+                </div>
+                <div class="qr-info-row">
+                    <div class="qr-info-label"><i class="fas fa-cubes"></i> Quantidade:</div>
+                    <div class="qr-info-value">${quantidadeExibida}</div>
+                </div>
+                <div class="qr-info-row">
+                    <div class="qr-info-label"><i class="fas fa-weight-hanging"></i> Peso (kg):</div>
+                    <div class="qr-info-value">${kgExibido}</div>
+                </div>
+                <div class="qr-info-row">
+                    <div class="qr-info-label"><i class="fas fa-map-marker-alt"></i> Localização:</div>
+                    <div class="qr-info-value">${escapeHtml(material.localizacao || 'Não informada')}</div>
+                </div>
+                <div class="qr-info-row">
+                    <div class="qr-info-label"><i class="fas fa-chart-line"></i> Status:</div>
+                    <div class="qr-info-value"><span class="status-badge ${statusClass}">${statusText}</span></div>
+                </div>
+            `;
+            
+            document.getElementById('qrModal').style.display = 'flex';
+        }
+
+        function downloadQRCode() {
+            const qrContainer = document.getElementById('qrCodeContainer');
+            const qrCanvas = qrContainer.querySelector('canvas');
+            
+            if (qrCanvas) {
+                const link = document.createElement('a');
+                link.download = `qr_code.png`;
+                link.href = qrCanvas.toDataURL('image/png');
+                link.click();
+                showNotification('QR Code baixado com sucesso!', 'success');
+            } else {
+                showNotification('Erro ao gerar imagem do QR Code', 'error');
+            }
+        }
+        
+        function copiarLink() {
+            const qrContainer = document.getElementById('qrCodeContainer');
+            const qrCanvas = qrContainer.querySelector('canvas');
+            if (qrCanvas) {
+                const link = prompt('Link para compartilhar:', qrCanvas.getAttribute('data-link') || '');
+                if (link) {
+                    navigator.clipboard.writeText(link).then(() => {
+                        showNotification('Link copiado para a área de transferência!', 'success');
+                    }).catch(() => {
+                        showNotification('Erro ao copiar link', 'error');
+                    });
+                }
+            }
+        }
+
         function setupImageCapture() {
             const cameraArea = document.getElementById('cameraArea');
             const takePhotoBtn = document.getElementById('takePhotoBtn');
@@ -1990,9 +2166,6 @@
             }
         }
 
-        // ============================================
-        // CRUD DE MATERIAIS
-        // ============================================
         async function salvarMaterial() {
             const codigo = document.getElementById('matCodigo').value.trim();
             const nome = document.getElementById('matNome').value.trim();
@@ -2136,9 +2309,10 @@
             document.getElementById('editModal').style.display = 'none';
         }
 
-        // ============================================
-        // ATUALIZAR INTERFACE
-        // ============================================
+        function fecharQrModal() {
+            document.getElementById('qrModal').style.display = 'none';
+        }
+
         function escapeHtml(text) {
             if (!text) return '';
             const div = document.createElement('div');
@@ -2154,17 +2328,10 @@
                 m.tipo.toLowerCase().includes(filtro) ||
                 (m.localizacao && m.localizacao.toLowerCase().includes(filtro))
             );
-            const tipoFiltro = document.querySelector('.tab-button.active')?.dataset.tab === 'catalogo-geral' ?
-                (document.getElementById('filterNormalBtn')?.classList.contains('active') ? 'normal' :
-                    document.getElementById('filterBaixoBtn')?.classList.contains('active') ? 'baixo' : 'todos') : 'todos';
-            if (tipoFiltro === 'normal') {
-                filtered = filtered.filter(m => { const qtd = m.unidade === 'kg' ? m.quantidade : m.quantidade; return qtd > (m.estoque_minimo || 0); });
-            } else if (tipoFiltro === 'baixo') {
-                filtered = filtered.filter(m => { const qtd = m.unidade === 'kg' ? m.quantidade : m.quantidade; return qtd <= (m.estoque_minimo || 0) && qtd > 0; });
-            }
+            
             const tbody = document.getElementById('materiaisTableBody');
             if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">Nenhum material encontrado</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">Nenhum material encontrado</td></tr>';
                 return;
             }
             let html = '';
@@ -2190,6 +2357,7 @@
                     <td class="action-buttons">
                         <button class="btn btn-sm btn-primary" onclick="abrirEditar(${m.id})"><i class="fas fa-edit"></i> Editar</button>
                         <button class="btn btn-sm btn-danger" onclick="excluirMaterialDireto(${m.id}, '${escapeHtml(m.nome).replace(/'/g, "\\'")}')"><i class="fas fa-trash"></i> Excluir</button>
+                        <button class="btn btn-sm btn-info" onclick="abrirQrCode(materiais.find(m => m.id === ${m.id}))"><i class="fas fa-qrcode"></i> QR Code</button>
                     </td>
                 </tr>`;
             });
@@ -2283,7 +2451,6 @@
             showNotification('Exportado com sucesso!', 'success');
         }
 
-        // FUNÇÃO DE BACKUP JSON
         function backupToJson() {
             const dataStr = JSON.stringify(materiais, null, 2);
             const blob = new Blob([dataStr], { type: 'application/json' });
@@ -2315,9 +2482,6 @@
             setTimeout(() => notification.remove(), 4000);
         }
 
-        // ============================================
-        // ZOOM (NOVO - BOTÕES VERTICAIS)
-        // ============================================
         function setupZoom() {
             const zoomBtns = document.querySelectorAll('.zoom-vertical-btn');
             zoomBtns.forEach(btn => {
@@ -2327,7 +2491,6 @@
                     if (percent === 10) document.body.classList.add('zoom-10');
                     else if (percent === 15) document.body.classList.add('zoom-15');
                     else if (percent === 20) document.body.classList.add('zoom-20');
-                    else if (percent === 0) { /* normal */ }
                     localStorage.setItem('zoomLevel', percent);
                     showNotification(`Zoom ${percent === 0 ? 'restaurado' : `aumentado em ${percent}%`}`, 'success');
                 });
@@ -2338,14 +2501,10 @@
             }
         }
 
-        // ============================================
-        // EVENTOS E INICIALIZAÇÃO
-        // ============================================
         function initializeSystem() {
             setupImageCapture();
             setupZoom();
             
-            // Evento do botão de backup vertical
             const backupVerticalBtn = document.getElementById('backupJsonVerticalBtn');
             if (backupVerticalBtn) {
                 backupVerticalBtn.addEventListener('click', backupToJson);
@@ -2359,6 +2518,14 @@
             document.getElementById('syncDownBtn').addEventListener('click', syncFromCloud);
             document.getElementById('refreshDataBtn').addEventListener('click', () => carregarMateriais());
             document.getElementById('floatingSyncBtn').addEventListener('click', syncToCloud);
+            
+            document.getElementById('downloadQrBtn').addEventListener('click', downloadQRCode);
+            document.getElementById('copyLinkBtn').addEventListener('click', copiarLink);
+            document.getElementById('closeQrModalBtn').addEventListener('click', fecharQrModal);
+            
+            document.getElementById('qrModal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('qrModal')) fecharQrModal();
+            });
             
             document.getElementById('filterAllBtn').addEventListener('click', () => {
                 document.querySelectorAll('#filterAllBtn, #filterNormalBtn, #filterBaixoBtn').forEach(btn => btn.classList.remove('active'));
@@ -2412,6 +2579,8 @@
         window.abrirEditar = abrirEditar;
         window.excluirMaterialDireto = excluirMaterialDireto;
         window.viewImage = viewImage;
+        window.abrirQrCode = abrirQrCode;
+        window.materiais = materiais;
     </script>
 </body>
 
